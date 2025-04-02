@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bolbol - Anasayfa</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        nav {
+            background-color: #343a40;
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        nav a {
+            color: white;
+            font-size: 1.1em;
+            margin: 0 20px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            color: #f39c12;
+        }
+
+        .categories {
+            display: flex;
+            justify-content: center;
+            margin-top: 100px; /* Adjusted for fixed navbar */
+        }
+
+        .category {
+            background-color: #f39c12;
+            color: white;
+            padding: 20px;
+            margin: 0 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            width: 150px;
+        }
+
+        .category:hover {
+            background-color: #e67e22;
+        }
+
+        .category a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+
+        .advertisements {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            gap: 20px;
+            padding: 100px 20px 30px;
+        }
+
+        .advertisement {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 300px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .advertisement:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .advertisement img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+
+        .advertisement h2 {
+            font-size: 1.4em;
+            margin: 15px;
+            color: #333;
+        }
+
+        .advertisement p {
+            font-size: 1em;
+            margin: 15px;
+            color: #6c757d;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer a {
+            color: #f39c12;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            color: #e67e22;
+        }
+
+        .like-btn {
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .like-btn:hover {
+            background-color: #e67e22;
+        }
+
+        .liked {
+            background-color: #e67e22;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="{% url 'home' %}">Anasayfa</a>
+        <a href="{% url 'ads' %}">İlanlar</a>
+        <a href="{% url 'about' %}">Hakkımızda</a>
+        <a href="{% url 'contact' %}">İletişim</a>
+    </nav>
+
+    <!-- Category Filters -->
+    <div class="categories">
+        <div class="category">
+            <a href="{% url 'category_ads' category='Neqliyat' %}">Neqliyat</a>
+        </div>
+        <div class="category">
+            <a href="{% url 'category_ads' category='Daşınmaz Emlak' %}">Daşınmaz Emlak</a>
+        </div>
+        <div class="category">
+            <a href="{% url 'category_ads' category='Geyim' %}">Geyim</a>
+        </div>
+        <div class="category">
+            <a href="{% url 'category_ads' category='İş İlanları' %}">İş İlanları</a>
+        </div>
+    </div>
+
+    <!-- Advertisement List (on Home Page) -->
+    <h1 style="text-align: center; margin-top: 60px;">Yeni İlanlar</h1>
+
+    <div class="advertisements">
+        {% if advertisements %}
+            {% for ad in advertisements %}
+                <div class="advertisement">
+                    <a href="{% url 'ad_detail' ad.id %}">
+                        {% if ad.image %}
+                            <img src="{{ ad.image.url }}" alt="{{ ad.title }}">
+                        {% endif %}
+                        <h2>{{ ad.title }}</h2>
+                        <p>{{ ad.description|slice:":100" }}...</p>
+                        <small>Yayınlanma Tarihi: {{ ad.created_at }}</small>
+                    </a>
+                    <!-- Like Button -->
+                    <form method="POST" action="{% url 'toggle_like' ad.id %}" class="like-form">
+                        {% csrf_token %}
+                        <button type="submit" class="like-btn {% if request.user in ad.liked_by.all %}liked{% endif %}">
+                            {% if request.user in ad.liked_by.all %}Beğenildi{% else %}Beğen{% endif %}
+                        </button>
+                    </form>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="text-align: center; font-size: 1.2em; color: #333;">Şu anda yayınlanmış ilan yok.</p>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Bolbol İlanları. Tüm hakları saklıdır.</p>
+        <p><a href="#">Gizlilik Politikası</a> | <a href="#">İletişim</a></p>
+    </footer>
+
+</body>
+</html>

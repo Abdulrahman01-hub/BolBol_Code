@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bolbol</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Ana Sayfa</a></li>
+                <li><a href="{% url 'ads' %}">İlanlar</a></li>
+                <li><a href="{% url 'about' %}">Hakkında</a></li>
+                <li><a href="{% url 'contact' %}">İletişim</a></li>
+                <li><a href="{% url 'search_results' %}">Arama</a></li>
+
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'profile' %}">Profilim</a></li>
+                    <li><a href="{% url 'favorites' %}">Favoriler</a></li>
+                    <li><a href="{% url 'notifications' %}">Bildirimler 
+                        {% with user.notifications.filter(is_read=False).count as unread_count %}
+                            {% if unread_count > 0 %}
+                                <span style="color:red;">({{ unread_count }})</span>
+                            {% endif %}
+                        {% endwith %}
+                    </a></li>
+                    <!-- Çıkış yapma butonu -->
+                    <form action="{% url 'logout' %}" method="POST" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Çıkış Yap</button>
+                    </form>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Giriş Yap</a></li>
+                    <li><a href="{% url 'signup' %}">Kayıt Ol</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Bolbol. Tüm hakları saklıdır.</p>
+    </footer>
+</body>
+</html>

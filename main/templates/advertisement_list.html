@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category|title if category else 'Tüm' }} İlanları - Bolbol</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        nav {
+            background-color: #343a40;
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        nav a {
+            color: white;
+            font-size: 1.1em;
+            margin: 0 20px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            color: #f39c12;
+        }
+
+        .categories {
+            display: flex;
+            justify-content: center;
+            margin-top: 100px; /* Adjusted for fixed navbar */
+        }
+
+        .category {
+            background-color: #f39c12;
+            color: white;
+            padding: 20px;
+            margin: 0 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            width: 150px;
+        }
+
+        .category:hover {
+            background-color: #e67e22;
+        }
+
+        .category a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+
+        .search-form {
+            text-align: center;
+            margin: 80px 0 30px;
+        }
+
+        .search-form input {
+            padding: 10px;
+            font-size: 1em;
+            width: 300px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+        }
+
+        .search-form button {
+            padding: 10px 20px;
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-form button:hover {
+            background-color: #e67e22;
+        }
+
+        .advertisements {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            gap: 20px;
+            padding: 30px 20px;
+        }
+
+        .advertisement {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 300px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .advertisement:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .advertisement img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+
+        .advertisement h2 {
+            font-size: 1.4em;
+            margin: 15px;
+            color: #333;
+        }
+
+        .advertisement p {
+            font-size: 1em;
+            margin: 15px;
+            color: #6c757d;
+        }
+
+        .advertisement .price,
+        .advertisement .location {
+            font-weight: bold;
+            margin: 10px 15px;
+        }
+
+        .advertisement .status {
+            color: #f39c12;
+            font-weight: bold;
+            margin: 10px 15px;
+        }
+
+        .advertisement .social-share {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .social-share a {
+            margin: 0 5px;
+            text-decoration: none;
+            color: #333;
+            font-size: 1.2em;
+        }
+
+        .social-share a:hover {
+            color: #f39c12;
+        }
+
+        .delete-button {
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-button:hover {
+            background-color: darkred;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer a {
+            color: #f39c12;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            color: #e67e22;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="{% url 'home' %}">Anasayfa</a>
+        <a href="{% url 'ads' %}">İlanlar</a>
+        <a href="{% url 'about' %}">Hakkımızda</a>
+        <a href="{% url 'contact' %}">İletişim</a>
+        <a href="{% url 'profile' %}">Profil</a> <!-- Profil Linki -->
+    </nav>
+
+    <!-- Category Filters -->
+    <div class="categories">
+        <div class="category">
+            <a href="{% url 'category_ads' category='Neqliyat' %}">Neqliyat</a>
+        </div>
+        <div class="category">
+            <a href="{% url 'category_ads' category='Daşınmaz Emlak' %}">Daşınmaz Emlak</a>
+        </div>
+        <div class="category">
+            <a href="{% url 'category_ads' category='Geyim' %}">Geyim</a>
+        </div>
+        <div class="category">
+            <a href="{% url 'category_ads' category='İş İlanları' %}">İş İlanları</a>
+        </div>
+    </div>
+
+    <!-- Search Form -->
+    <div class="search-form">
+        <form method="get" action="{% url 'search_results' %}">
+            <input type="text" name="query" placeholder="İlan arayın..." value="{{ query }}" required>
+            <button type="submit">Ara</button>
+        </form>
+    </div>
+
+    <!-- Advertisement List -->
+    <h1 style="text-align: center; margin-top: 60px;">{{ category|title if category else 'Tüm' }} İlanları</h1>
+
+    <div class="advertisements">
+        {% if advertisements %}
+            {% for ad in advertisements %}
+                <div class="advertisement">
+                    <a href="{% url 'ad_detail' ad.id %}">
+                        {% if ad.image %}
+                            <img src="{{ ad.image.url }}" alt="{{ ad.title }}">
+                        {% endif %}
+                        <h2>{{ ad.title }}</h2>
+                        <p>{{ ad.description|slice:":100" }}...</p>
+                        <div class="price">Fiyat: {{ ad.price }} AZN</div>
+                        <div class="location">Lokasyon: {{ ad.location }}</div>
+                        <div class="status">Durum: {{ ad.status }}</div>
+                    </a>
+
+                    <!-- Silme Butonu -->
+                    {% if user == ad.user %}
+                        <form method="POST" action="{% url 'delete_advertisement' ad.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-button">İlanı Sil</button>
+                        </form>
+                    {% endif %}
+
+                    <!-- Favorite Button -->
+                    <button class="favorite-button" data-ad-id="{{ ad.id }}">
+                        {% if ad in user.favorites.all %}
+                            Favorilerden Çıkar
+                        {% else %}
+                            Favorilere Ekle
+                        {% endif %}
+                    </button>
+
+                    <!-- Like Button -->
+                    <button class="like-button" data-ad-id="{{ ad.id }}">
+                        {% if ad in user.likes.all %}
+                            Beğenmekten Vazgeç
+                        {% else %}
+                            Beğen
+                        {% endif %}
+                    </button>
+
+                    <div class="social-share">
+                        <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="_blank">
+                            Twitter
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank">
+                            Facebook
+                        </a>
+                        <a href="https://wa.me/?text={{ request.build_absolute_uri }}" target="_blank">
+                            WhatsApp
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="text-align: center; font-size: 1.2em; color: #333;">Aradığınız kriterlere uygun ilan bulunamadı.</p>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Bolbol İlanları. Tüm hakları saklıdır.</p>
+        <p><a href="#">Gizlilik Politikası</a> | <a href="#">İletişim</a></p>
+    </footer>
+
+    <!-- JavaScript (AJAX for Favorites and Likes) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Handle Favorite Button Click
+            $(".favorite-button").click(function() {
+                var adId = $(this).data("ad-id");
+
+                $.ajax({
+                    url: "{% url 'toggle_favorite' %}",
+                    method: "POST",
+                    data: {
+                        'ad_id': adId,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            var buttonText = response.is_favorite ? 'Favorilerden Çıkar' : 'Favorilere Ekle';
+                            $(".favorite-button[data-ad-id='" + adId + "']").text(buttonText);
+                        }
+                    }
+                });
+            });
+
+            // Handle Like Button Click
+            $(".like-button").click(function() {
+                var adId = $(this).data("ad-id");
+
+                $.ajax({
+                    url: "{% url 'toggle_like' %}",
+                    method: "POST",
+                    data: {
+                        'ad_id': adId,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            var buttonText = response.is_liked ? 'Beğenmekten Vazgeç' : 'Beğen';
+                            $(".like-button[data-ad-id='" + adId + "']").text(buttonText);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

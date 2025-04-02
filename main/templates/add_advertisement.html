@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İlan Əlavə Et - Bolbol</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav {
+            background-color: #343a40;
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        nav a {
+            color: white;
+            font-size: 1.1em;
+            margin: 0 20px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            color: #f39c12;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 100px auto 0;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .container:hover {
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input[type="file"],
+        .form-group textarea,
+        .form-group select {
+            background-color: #f9f9f9;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #f39c12;
+            outline: none;
+            background-color: #fff;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            height: 150px;
+        }
+
+        .form-group button {
+            padding: 12px 20px;
+            background-color: #f39c12;
+            color: white;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-group button:hover {
+            background-color: #e67e22;
+        }
+
+        .form-group button:focus {
+            outline: none;
+        }
+
+        /* Dropdown Styling */
+        .form-group select {
+            height: 40px;
+            background-color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="{% url 'home' %}">Əsas Səhifə</a>
+        <a href="{% url 'ads' %}">İlanlar</a>
+        <a href="{% url 'about' %}">Haqqımızda</a>
+        <a href="{% url 'contact' %}">Əlaqə</a>
+    </nav>
+
+    <!-- Form Container -->
+    <div class="container">
+        <h1>İlan Əlavə Et</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Başlıq -->
+            <div class="form-group">
+                <label for="id_title">Başlıq:</label>
+                {{ form.title }}
+            </div>
+
+            <!-- Təsvir -->
+            <div class="form-group">
+                <label for="id_description">Təsvir:</label>
+                {{ form.description }}
+            </div>
+
+            <!-- Qiymət -->
+            <div class="form-group">
+                <label for="id_price">Qiymət:</label>
+                {{ form.price }}
+            </div>
+
+            <!-- Kateqoriya -->
+            <div class="form-group">
+                <label for="id_category">Kateqoriya:</label>
+                {{ form.category }}
+            </div>
+
+            <!-- Yerləşmə -->
+            <div class="form-group">
+                <label for="id_location">Yerləşmə:</label>
+                <select name="location" id="id_location" required>
+                    <option value="">Yerləşməni Seçin</option>
+                    <option value="Bakı">Bakı</option>
+                    <option value="Gəncə">Gəncə</option>
+                    <option value="Sumqayit">Sumqayit</option>
+                    <option value="Mingəçevir">Mingəçevir</option>
+                    <option value="Lənkəran">Lənkəran</option>
+                    <option value="Şəki">Şəki</option>
+                    <option value="Quba">Quba</option>
+                    <option value="Şəmkir">Şəmkir</option>
+                    <option value="Zaqatala">Zaqatala</option>
+                    <option value="Qazax">Qazax</option>
+                    <option value="Yevlax">Yevlax</option>
+                    <option value="Balakan">Balakan</option>
+                </select>
+            </div>
+
+            <!-- Şəkil -->
+            <div class="form-group">
+                <label for="id_image">Şəkil:</label>
+                {{ form.image }}
+            </div>
+
+            <!-- Əlaqə Məlumatları -->
+            <div class="form-group">
+                <label for="id_contact">Əlaqə Məlumatları:</label>
+                <!-- Telefon nömrəsi üçün ölkə kodu və nömrə -->
+                <div>
+                    <label for="id_country">Ölkə:</label>
+                    <select name="country" id="id_country" onchange="updatePhoneCode()" required>
+                        <option value="">Ölkə Seçin</option>
+                        <option value="+994">Azərbaycan (+994)</option>
+                        <option value="+1">ABŞ (+1)</option>
+                        <option value="+44">Böyük Britaniya (+44)</option>
+                        <option value="+90">Türkiyə (+90)</option>
+                        <option value="+49">Almaniya (+49)</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="text" name="contact" id="id_contact" placeholder="Telefon nömrəsini daxil edin" required>
+                </div>
+            </div>
+
+            <!-- İlan Növü -->
+            <div class="form-group">
+                <label for="id_ad_type">İlan Növü:</label>
+                <select name="ad_type" id="id_ad_type">
+                    <option value="satilik">Satlıq</option>
+                    <option value="kiralik">Kiralıq</option>
+                </select>
+            </div>
+
+            <!-- Vəziyyət -->
+            <div class="form-group">
+                <label for="id_condition">Vəziyyət:</label>
+                <select name="condition" id="id_condition">
+                    <option value="yeni">Yeni</option>
+                    <option value="ikinci_el">İkinci əl</option>
+                </select>
+            </div>
+
+            <!-- Marka -->
+            <div class="form-group">
+                <label for="id_brand">Marka:</label>
+                <input type="text" name="brand" id="id_brand" placeholder="Marka adı">
+            </div>
+
+            <!-- Model -->
+            <div class="form-group">
+                <label for="id_model">Model:</label>
+                <input type="text" name="model" id="id_model" placeholder="Model">
+            </div>
+
+            <!-- İl -->
+            <div class="form-group">
+                <label for="id_year">İl:</label>
+                <select name="year" id="id_year">
+                    {% for year in years %}
+                        <option value="{{ year }}">{{ year }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Rəng -->
+            <div class="form-group">
+                <label for="id_color">Rəng:</label>
+                <select name="color" id="id_color">
+                    <option value="beyaz">Ağ</option>
+                    <option value="siyah">Qara</option>
+                    <option value="mavi">Mavi</option>
+                    <option value="kirmizi">Qırmızı</option>
+                    <option value="yesil">Yaşıl</option>
+                    <option value="gri">Boz</option>
+                    <option value="sarı">Sarı</option>
+                    <option value="mor">Bənövşəyi</option>
+                </select>
+            </div>
+
+            <!-- Zəmanət Durumu -->
+            <div class="form-group">
+                <label for="id_warranty">Zəmanət Durumu:</label>
+                <select name="warranty" id="id_warranty">
+                    <option value="var">Var</option>
+                    <option value="yok">Yox</option>
+                </select>
+            </div>
+
+            <!-- Çatdırılma Seçimləri -->
+            <div class="form-group">
+                <label for="id_delivery">Çatdırılma Seçimləri:</label>
+                <input type="text" name="delivery" id="id_delivery" placeholder="Çatdırılma seçimlərini yazın">
+            </div>
+
+            <!-- Yayın Durumu -->
+            <div class="form-group">
+                <label>Yayın Durumu:</label>
+                <label><input type="radio" name="status" value="draft" checked> Taslak olaraq saxla</label>
+                <label><input type="radio" name="status" value="published"> Yayınla</label>
+            </div>
+
+            <div class="form-group">
+                <button type="submit">İlanı Əlavə Et</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function updatePhoneCode() {
+            var countryCode = document.getElementById('id_country').value;
+            var phoneInput = document.getElementById('id_contact');
+
+            // Əgər ölkə kodu seçilibsə, onu telefon nömrəsinə əlavə edirik
+            if (countryCode) {
+                phoneInput.value = countryCode + ' ';
+            } else {
+                phoneInput.value = ''; // Əgər ölkə seçilməyibsə, boş qalır
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorilərim</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        nav {
+            background-color: #343a40;
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        nav a {
+            color: white;
+            font-size: 1.1em;
+            margin: 0 20px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            color: #f39c12;
+        }
+
+        header {
+            background-color: #6200ea;
+            color: #fff;
+            padding: 1rem 2rem;
+            text-align: center;
+            margin-top: 70px; /* For spacing due to fixed nav */
+        }
+
+        h2 {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 1rem 0;
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fafafa;
+            transition: box-shadow 0.3s, background 0.3s;
+        }
+
+        li:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: #f0f0f0;
+        }
+
+        a {
+            text-decoration: none;
+            color: #6200ea;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'home' %}">Ana Səhifə</a>
+        <a href="{% url 'ads' %}">Elanlar</a>
+        <a href="{% url 'about' %}">Haqqımızda</a>
+        <a href="{% url 'contact' %}">Əlaqə</a>
+    </nav>
+
+    <header>
+        <h2>Favori Elanlarım</h2>
+    </header>
+
+    <div class="container">
+        {% if favorites %}
+            <ul>
+                {% for ad in favorites %}
+                    <li>
+                        <a href="{% url 'ad_detail' ad.id %}">{{ ad.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty-message">Hələlik favori elanınız yoxdur.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

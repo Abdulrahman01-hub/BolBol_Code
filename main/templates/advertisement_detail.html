@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elan Detalı - Bolbol</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #343a40;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav a {
+            color: white;
+            font-size: 1em;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            color: #f39c12;
+        }
+
+        nav .search-bar {
+            padding: 6px 12px;
+            margin-left: auto;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+        }
+
+        /* Advertisement Detail Section */
+        .advertisement-detail {
+            margin-top: 70px;
+            padding: 30px;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 20px;
+        }
+
+        .advertisement-detail h1 {
+            font-size: 2.4em;
+            color: #343a40;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .advertisement-detail p {
+            font-size: 1.1em;
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .advertisement-detail strong {
+            font-weight: bold;
+            color: #343a40;
+        }
+
+        /* Image Styling */
+        .advertisement-detail .image-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .advertisement-detail .image-container img {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            object-fit: cover;
+        }
+
+        /* Info Section */
+        .advertisement-detail .info-container {
+            flex: 2;
+        }
+
+        .advertisement-detail .info-container .extra-info {
+            margin-top: 15px;
+            font-size: 1.05em;
+        }
+
+        .advertisement-detail .info-container .extra-info strong {
+            color: #343a40;
+        }
+
+        /* Comments Section */
+        .comment-section {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .comment {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+        }
+
+        .comment p {
+            font-size: 1.05em;
+            color: #343a40;
+        }
+
+        .comment small {
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        /* Comment Form */
+        .comment-form {
+            margin-top: 25px;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.05em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        .comment-form button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.05em;
+            transition: background-color 0.3s;
+        }
+
+        .comment-form button:hover {
+            background-color: #218838;
+        }
+
+        /* Like Button */
+        .like-button {
+            background-color: #f39c12;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.05em;
+            margin-top: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .like-button:hover {
+            background-color: #e67e22;
+        }
+
+        /* Notification */
+        .notification {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            display: none;
+        }
+
+        /* Share Section */
+        .share-form {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .share-form input[type="email"] {
+            width: calc(100% - 80px);
+            padding: 8px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 8px;
+        }
+
+        .share-form button {
+            padding: 8px 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .share-form button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1em;
+        }
+
+        footer a {
+            color: #f39c12;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            color: #e67e22;
+        }
+
+        /* Buttons */
+        .rating-button, .delete-button {
+            font-size: 1.05em;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .rating-button {
+            background-color: #28a745; /* Green color */
+            color: white;
+        }
+
+        .rating-button:hover {
+            background-color: #218838;
+        }
+
+        .delete-button {
+            background-color: #dc3545; /* Red color */
+            color: white;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        /* Rating Stars */
+        .stars {
+            direction: rtl; /* Yıldızlar sağdan sola olacak */
+            display: inline-block;
+            font-size: 2em;
+            position: relative;
+        }
+
+        .stars input[type="radio"] {
+            display: none;
+        }
+
+        .stars label {
+            color: #ccc; /* Yıldızların varsayılan rengi */
+            cursor: pointer;
+        }
+
+        .stars input[type="radio"]:checked ~ label,
+        .stars input[type="radio"]:hover ~ label {
+            color: #f39c12; /* Yıldızlar seçildiğinde altın rengi */
+        }
+
+        .stars input[type="radio"]:hover {
+            color: #f39c12; /* Yıldız üzerine gelindiğinde rengi altın yap */
+        }
+
+        /* Rating Button Styling (Renk Yeşil Yapılacak) */
+        .rating-button {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .rating-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="{% url 'home' %}">Ana Səhifə</a>
+        <a href="{% url 'ads' %}">Elanlar</a>
+        <a href="{% url 'about' %}">Haqqımızda</a>
+        <a href="{% url 'contact' %}">Əlaqə</a>
+        <input type="text" class="search-bar" placeholder="Elan Axtar...">
+    </nav>
+
+    <!-- Advertisement Detail Section -->
+    <div class="advertisement-detail">
+        <!-- Image Container -->
+        <div class="image-container">
+            {% if ad.image %}
+                <img src="{{ ad.image.url }}" alt="{{ ad.title }}">
+            {% endif %}
+        </div>
+
+        <!-- Information Container -->
+        <div class="info-container">
+            <h1>{{ ad.title }}</h1>
+            <p>{{ ad.description }}</p>
+            <p><strong>Yayımlanma Tarixi:</strong> {{ ad.created_at }}</p>
+            <p><strong>Qiymət:</strong> {{ ad.price }} ₼</p>
+            <p><strong>Görüntüləmə:</strong> {{ ad.views_count }}</p>
+
+            <!-- Extra Info -->
+            <div class="extra-info">
+                <p><strong>Yerləşmə:</strong> {{ ad.location }}</p>
+                <p><strong>Kateqoriya:</strong> {{ ad.category.name }}</p>
+                <p><strong>Əlaqə:</strong> {{ ad.contact_info }}</p>
+            </div>
+
+            <!-- Buttons -->
+            <div class="buttons-container">
+                <form method="POST" action="{% url 'delete_advertisement' ad.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-button">Elanı Sil</button>
+                </form>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="comment-section">
+                <h3>Şərhlər</h3>
+                {% for comment in comments %}
+                    <div class="comment">
+                        <p>{{ comment.content }}</p>
+                        <small>{{ comment.user.username }} - {{ comment.created_at }}</small>
+                    </div>
+                {% empty %}
+                    <p>Hələ şərh yazılmayıb.</p>
+                {% endfor %}
+            </div>
+
+            <!-- Comment Form -->
+            <div class="comment-form">
+                <h3>Şərh Yazın</h3>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ comment_form.as_p }}
+                    <button type="submit">Şərhi Göndər</button>
+                </form>
+            </div>
+
+            <!-- Like Button -->
+            <button class="like-button">Bəyən</button>
+
+            <!-- Puanlama -->
+            <div class="rating">
+                <h3>Qiymətləndirin</h3>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div>
+                        <label for="rating">Qiymətiniz:</label>
+                        <div class="stars">
+                            <input type="radio" name="rating" id="star5" value="5" />
+                            <label for="star5">&#9733;</label>
+                            <input type="radio" name="rating" id="star4" value="4" />
+                            <label for="star4">&#9733;</label>
+                            <input type="radio" name="rating" id="star3" value="3" />
+                            <label for="star3">&#9733;</label>
+                            <input type="radio" name="rating" id="star2" value="2" />
+                            <label for="star2">&#9733;</label>
+                            <input type="radio" name="rating" id="star1" value="1" />
+                            <label for="star1">&#9733;</label>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="comment">Şərh:</label>
+                        <textarea name="comment" id="comment"></textarea>
+                    </div>
+                    <button class="rating-button" type="submit">Qiymətləndir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Section -->
+    <div class="share-form">
+        <h3>Dostlarınızla Paylaşın</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="email" name="email" placeholder="E-poçt ünvanınızı daxil edin" required>
+            <button type="submit">Paylaş</button>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Bolbol. Bütün hüquqlar qorunur.</p>
+        <p><a href="#">Gizlilik Siyasəti</a> | <a href="#">İstifadə Şərtləri</a></p>
+    </footer>
+
+</body>
+</html>
